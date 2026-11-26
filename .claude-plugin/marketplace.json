@@ -1,0 +1,22 @@
+{
+  "name": "ik2m-skills",
+  "owner": {
+    "name": "ik2m"
+  },
+  "description": "ik2m の Agent Skills",
+  "plugins": [
+    {
+      "name": "image",
+      "source": "./",
+      "description": "HTML/CSS で画像を作る Skill。8 案を見せて選んでもらい、確定までくり返す",
+      "version": "0.1.0",
+      "author": {
+        "name": "ik2m"
+      },
+      "homepage": "https://github.com/ik2m/skills",
+      "repository": "https://github.com/ik2m/skills",
+      "strict": false,
+      "skills": ["./skills/image-maker"]
+    }
+  ]
+}
