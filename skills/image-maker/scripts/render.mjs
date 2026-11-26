@@ -296,6 +296,32 @@ for (const r of report) {
   console.log(`${r.file}: ${r.issues.length ? `${r.issues.length} issue(s)` : 'ok'}`);
   for (const i of r.issues) console.log(`  - ${i.type}${i.where ? ` ${i.where}` : ''}${i.text ? ` 「${i.text}」` : ''}${i.detail ? `: ${i.detail}` : ''}`);
 }
+
+// The fix for each issue type lives here, next to the check, so SKILL.md does not need to list them.
+const HOW_TO_FIX = {
+  clipped: '枠に収まらず文字が切れている。枠を広げるか、文字を小さく・短くする',
+  'off-canvas': '文字が画像の外にはみ出している。位置か大きさを直す',
+  'outside-safe-area': '文字がセーフエリアの外にある。内側に寄せる（わざと端に置く飾り文字なら data-outside-safe-ok）',
+  'small-text': '文字が minFontPx より小さく、縮小表示で読めない。大きくする（小さくてよい注記なら data-small-ok）',
+  'auto-wrap': '大きな見出しをブラウザが勝手に折り返した（「はじま／りました」になりやすい）。<br> の位置を直すか、文字を小さく・短くする（任せてよいなら data-wrap-ok）',
+  'font-not-loaded': '指定したフォントが読み込まれず、別のフォントで表示されている。Google Fonts の family 名の綴りと、そのフォントにある太さ（wght）を指定しているか確かめる',
+  'font-error': 'フォントの読み込みに失敗した。URL とネットワークを確かめる',
+  'image-missing': '写真が読み込めていない。assets/ への相対パスを確かめる',
+  'missing-lang': '<html lang="ja"> がない。付けないと日本語の改行と字形がおかしくなる',
+  'page-error': 'ページの読み込み中にエラーが出た。内容を確かめる',
+  'text-missing': '必須のテキストが載っていない。載せるか、ユーザーに確かめて texts.json で optional にする',
+  'text-changed': 'fixed のテキストが一字一句同じでない。texts.json のとおりに戻す',
+  'text-reworded': 'shorten のテキストは文字を削ることしかできない。言い換えや追加をやめる',
+  'priority-inverted': '優先順位の低いテキストのほうが文字が大きい。色や位置で優先順位を表しているなら問題ないので、目で確かめる',
+  'text-untracked': 'texts.json にない文字が載っている。事実を足していないか確かめ、必要ならユーザーに確かめて texts.json に加える（仮の枠の文字なら data-placeholder）',
+  'text-unknown-id': 'data-text の id が texts.json にない。綴りを直すか texts.json に加える',
+};
+const seenTypes = [...new Set(report.flatMap((r) => r.issues.map((i) => i.type)))];
+if (seenTypes.length) {
+  console.log('\n直し方:');
+  for (const t of seenTypes) console.log(`  ${t}: ${HOW_TO_FIX[t] ?? '内容を確かめる'}`);
+}
+console.log('');
 if (sheetPath) console.log(`sheet: ${sheetPath}`);
 if (texts) console.log(`texts: ${textsPath}`);
 console.log(`report: ${join(outDir, 'report.json')}`);
